@@ -1,0 +1,18 @@
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Django project files
+*.log
+local_settings.py
+db.sqlite3
+
+# Django static files
+/static/
+/media/
+
+# Virtual environment files
+venv/
+.env
