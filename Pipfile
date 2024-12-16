@@ -7,6 +7,8 @@ name = "pypi"
 django = "*"
 djangorestframework = "*"
 django-allauth = "*"
+dj-rest-auth = {extras = ["with_social"], version = "*"}
+python-dotenv = "*"
 
 [dev-packages]
 

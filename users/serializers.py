@@ -5,36 +5,43 @@ from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.models import User
 from django.urls import reverse
-
+from dj_rest_auth.registration.serializers import RegisterSerializer
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
-class RegisterSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['email', 'password']
-        extra_kwargs = {
-            'password': {'write_only': True},
-        }
+class CustomRegisterSerializer(RegisterSerializer):
+    pass
+    # class Meta:
+    #     model = User
+    #     fields = ['email', 'password']
+    #     extra_kwargs = {
+    #         'password': {'write_only': True},
+    #     }
 
-    def create(self, validated_data):
-        user = User.objects.create_user(
-            email=validated_data['email'],
-            password=validated_data['password']
-        )
-        user.is_active = False  # Require email verification
-        user.save()
-        self.send_verification_email(user)
-        return user
+    # def validate_email(self, email):
+    #     if User.objects.filter(email=email).exists():
+    #         raise ValidationError("A user with this email already exists.")
+    #     return email
 
-    def send_verification_email(self, user):
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-        token = default_token_generator.make_token(user)
-        verification_link = self.context['request'].build_absolute_uri(
-            reverse('verify-email', kwargs={'uidb64': uid, 'token': token})
-        )
-        subject = 'Verify Your Email'
-        message = f'Click the link to verify your email: {verification_link}'
-        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+    # def create(self, validated_data):
+    #     user = User.objects.create_user(
+    #         email=validated_data['email'],
+    #         password=validated_data['password']
+    #     )
+    #     user.is_active = False  # Require email verification
+    #     user.save()
+    #     self.send_verification_email(user)
+    #     return user
+
+    # def send_verification_email(self, user):
+    #     uid = urlsafe_base64_encode(force_bytes(user.pk))
+    #     token = default_token_generator.make_token(user)
+    #     verification_link = self.context['request'].build_absolute_uri(
+    #         reverse('verify-email', kwargs={'uidb64': uid, 'token': token})
+    #     )
+    #     subject = 'Verify Your Email'
+    #     message = f'Click the link to verify your email: {verification_link}'
+    #     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
 
 
 class VerifyEmailSerializer(serializers.Serializer):
