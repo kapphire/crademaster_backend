@@ -9,6 +9,7 @@ djangorestframework = "*"
 django-allauth = "*"
 dj-rest-auth = {extras = ["with_social"], version = "*"}
 python-dotenv = "*"
+django-anymail = "*"
 
 [dev-packages]
 
