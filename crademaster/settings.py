@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from dotenv import load_dotenv
+from datetime import timedelta
 import os
 
 load_dotenv()
@@ -35,6 +36,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,21 +45,27 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt.token_blacklist',
+
+    'dj_rest_auth',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'rest_framework',
-    'rest_framework.authtoken',
-    'dj_rest_auth',
+
     'dj_rest_auth.registration',
 
     'anymail',
 
     'authentication',
     'users',
+    'transactions',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -74,7 +82,7 @@ ROOT_URLCONF = 'crademaster.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -82,7 +90,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.request',
             ],
         },
     },
@@ -127,12 +134,28 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-    ]
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
 
+REST_USE_JWT = True
 
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+REST_AUTH = {
+    'USE_JWT': True,
+    'TOKEN_MODEL': None,
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
@@ -171,9 +194,8 @@ EMAIL_BACKEND = 'anymail.backends.mailgun.EmailBackend'
 DEFAULT_FROM_EMAIL = 'enterprise.king9@gmail.com'
 SERVER_EMAIL = 'enterprise.king9@gmail.com'
 
-EMAIL_CONFIRM_REDIRECT_BASE_URL = f'{os.getenv("FE_DOMAIN")}/email/confirm/'
-
-PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL = f'{os.getenv("FE_DOMAIN")}/password-reset/confirm/'
+EMAIL_CONFIRM_REDIRECT_BASE_URL = f'{os.getenv("CRADEMASTER_FRONTEND")}/email/confirm/'
+PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL = f'{os.getenv("CRADEMASTER_FRONTEND")}/password-reset/confirm/'
 
 ANYMAIL = {
     'MAILGUN_API_KEY': os.getenv('MAILGUN_API_KEY'),
@@ -181,3 +203,28 @@ ANYMAIL = {
     'DEBUG_API_REQUESTS': False,
 }
 
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_CREDENTIALS = False
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://54.160.184.59",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://54.160.184.59",
+    "http://localhost:3000",
+]
+
+# Optional: Allow specific methods (GET, POST, etc.)
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS',
+]
+
+CSRF_COOKIE_NAME = "csrftoken"

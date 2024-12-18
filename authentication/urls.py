@@ -6,18 +6,21 @@ from dj_rest_auth.views import (
     PasswordResetConfirmView,
     PasswordResetView,
 )
-from dj_rest_auth.views import LoginView, LogoutView, UserDetailsView
-from django.urls import path
-
 from authentication.views import email_confirm_redirect, password_reset_confirm_redirect
 
-from .views import CustomRegisterView
+from dj_rest_auth.registration.views import RegisterView
+from dj_rest_auth.views import LoginView, LogoutView, UserDetailsView
+
+from django.urls import path, include, re_path
+
 
 urlpatterns = [
-    path('register/', CustomRegisterView.as_view(), name='rest_register'),
-    path('login/', LoginView.as_view(), name='rest_login'),
-    path('logout/', LogoutView.as_view(), name='rest_logout'),
-    path('user/', UserDetailsView.as_view(), name='rest_user_details'),
+    # path('', include('dj_rest_auth.urls')),
+    # path('register/', include('dj_rest_auth.registration.urls')),
+    path("register/", RegisterView.as_view(), name="rest_register"),
+    path("login/", LoginView.as_view(), name="rest_login"),
+    path("logout/", LogoutView.as_view(), name="rest_logout"),
+    path("user/", UserDetailsView.as_view(), name="rest_user_details"),
 
     path("register/verify-email/", VerifyEmailView.as_view(), name="rest_verify_email"),
     path("register/resend-email/", ResendEmailVerificationView.as_view(), name="rest_resend_email"),
