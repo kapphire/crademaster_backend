@@ -6,8 +6,8 @@ After=network.target
 [Service]
 User=sapphire
 Group=www-data
-WorkingDirectory=/home/sapphire//crademaster_backend
-ExecStart=/home/sapphire//crademaster_backend/venv/bin/gunicorn \
+WorkingDirectory=/home/sapphire/crademaster_backend
+ExecStart=/home/sapphire/.local/share/virtualenvs/crademaster_backend-S0DTyu1L/bin/gunicorn \
           --access-logfile - \
           --workers 3 \
           --bind 127.0.0.1:8000 \
