@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-e*pckn%ixzpc(5iii+otw-h^*+t!1jn$#_!3h*pg52d_kgy+^4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['146.70.253.109', 'localhost']
 
 
 # Application definition
@@ -109,8 +109,12 @@ WSGI_APPLICATION = 'crademaster.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
@@ -179,6 +183,8 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
 AUTH_USER_MODEL = 'users.CustomUser'
 
 SITE_ID = 1
@@ -209,11 +215,11 @@ CORS_ALLOW_CREDENTIALS = False
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "http://54.160.184.59",
+    "http://146.70.253.109",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://54.160.184.59",
+    "http://146.70.253.109",
     "http://localhost:3000",
 ]
 
