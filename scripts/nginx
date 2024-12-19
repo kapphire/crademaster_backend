@@ -1,28 +1,25 @@
 server {
     listen 80;
+    server_name 146.70.253.109;
 
     root /var/www/build;
     index index.htm index.html index.nginx-debian.html;
 
-    server_name 146.70.253.109;
-
-    # Serve React static files
     location / {
         try_files $uri $uri/ /index.html =404;
     }
 
     location /static/ {
-        alias /home/sapphire/crademaster_backend/static/;
+        root /home/sapphire/crademaster_backend;
     }
 
-    location /api {
-        proxy_pass http://unix:/run/gunicorn.sock;
+    location /api/ {
+        rewrite ^/api/(.*)$ /$1 break;
+        proxy_pass http://localhost:8000/;
         proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
         proxy_set_header Host $host;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
         proxy_cache_bypass $http_upgrade;
-        rewrite ^/api/?(.*) /$1 break;
     }
-
 }
