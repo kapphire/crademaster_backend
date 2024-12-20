@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'users',
     'transactions',
     'investments',
+    'dashboard',
 ]
 
 MIDDLEWARE = [
@@ -179,12 +180,16 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static/')
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
@@ -239,3 +244,5 @@ CORS_ALLOW_METHODS = [
 CSRF_COOKIE_NAME = "csrftoken"
 
 LOGIN_REDIRECT_URL  = 'dashboard'
+LOGOUT_REDIRECT_URL = 'dashboard'
+ACCOUNT_LOGOUT_ON_GET = True
