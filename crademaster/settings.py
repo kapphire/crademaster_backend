@@ -237,12 +237,16 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://crademaster.com",
     "https://www.crademaster.com",
+    "https://portal.crademaster.com",
+    "https://api.crademaster.com",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "https://crademaster.com",
     "https://www.crademaster.com",
+    "https://portal.crademaster.com",
+    "https://api.crademaster.com",
 ]
 
 # Optional: Allow specific methods (GET, POST, etc.)
