@@ -207,6 +207,11 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
+ACCOUNT_LOGOUT_ON_GET = True
+LOGIN_REDIRECT_URL  = 'dashboard'
+LOGOUT_REDIRECT_URL = 'dashboard'
+
+
 EMAIL_BACKEND = 'anymail.backends.mailgun.EmailBackend'
 DEFAULT_FROM_EMAIL = 'enterprise.king9@gmail.com'
 SERVER_EMAIL = 'enterprise.king9@gmail.com'
@@ -247,7 +252,3 @@ CORS_ALLOW_METHODS = [
 ]
 
 CSRF_COOKIE_NAME = "csrftoken"
-
-# LOGIN_REDIRECT_URL  = 'dashboard'
-# LOGOUT_REDIRECT_URL = 'dashboard'
-# ACCOUNT_LOGOUT_ON_GET = True
