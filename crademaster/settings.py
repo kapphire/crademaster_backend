@@ -208,6 +208,7 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 ACCOUNT_LOGOUT_ON_GET = True
+LOGIN_URL = 'accounts/login/'
 LOGIN_REDIRECT_URL  = 'dashboard'
 LOGOUT_REDIRECT_URL = 'dashboard'
 
