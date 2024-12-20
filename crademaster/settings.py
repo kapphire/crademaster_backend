@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-e*pckn%ixzpc(5iii+otw-h^*+t!1jn$#_!3h*pg52d_kgy+^4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['146.70.253.109', 'localhost']
+ALLOWED_HOSTS = ['crademaster.com', 'localhost']
 
 
 # Application definition
@@ -215,11 +215,11 @@ CORS_ALLOW_CREDENTIALS = False
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "http://146.70.253.109",
+    "https://crademaster.com",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://146.70.253.109",
+    "https://crademaster.com",
     "http://localhost:3000",
 ]
 
