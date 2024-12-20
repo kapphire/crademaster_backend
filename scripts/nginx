@@ -1,20 +1,26 @@
 server {
     listen 80;
-    server_name 146.70.253.109;
+    server_name crademaster.com www.crademaster.com;
 
     root /var/www/build;
-    index index.htm index.html index.nginx-debian.html;
+    index index.html;
 
     location / {
-        try_files $uri $uri/ /index.html =404;
+        try_files $uri /index.html;
     }
+
+}
+
+
+server {
+    listen 80;
+    server_name api.crademaster.com;
 
     location /static/ {
         root /home/sapphire/crademaster_backend;
     }
 
-    location /api/ {
-        rewrite ^/api/(.*)$ /$1 break;
+    location / {
         proxy_pass http://localhost:8000/;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;

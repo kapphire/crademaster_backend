@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-e*pckn%ixzpc(5iii+otw-h^*+t!1jn$#_!3h*pg52d_kgy+^4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['crademaster.com', 'www.crademaster.com', 'api.crademaster.com', 'localhost']
+ALLOWED_HOSTS = ['api.crademaster.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -217,14 +217,12 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://crademaster.com",
     "https://www.crademaster.com",
-    "https://api.crademaster.com",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "https://crademaster.com",
     "https://www.crademaster.com",
-    "https://api.crademaster.com",
 ]
 
 # Optional: Allow specific methods (GET, POST, etc.)
