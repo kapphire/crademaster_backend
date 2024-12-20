@@ -30,7 +30,12 @@ SECRET_KEY = 'django-insecure-e*pckn%ixzpc(5iii+otw-h^*+t!1jn$#_!3h*pg52d_kgy+^4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['api.crademaster.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    'api.crademaster.com',
+    'portal.crademaster.com',
+    'localhost',
+    '127.0.0.1'
+]
 
 
 # Application definition
@@ -184,12 +189,12 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static/')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static/')
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
@@ -243,6 +248,6 @@ CORS_ALLOW_METHODS = [
 
 CSRF_COOKIE_NAME = "csrftoken"
 
-LOGIN_REDIRECT_URL  = 'dashboard'
-LOGOUT_REDIRECT_URL = 'dashboard'
-ACCOUNT_LOGOUT_ON_GET = True
+# LOGIN_REDIRECT_URL  = 'dashboard'
+# LOGOUT_REDIRECT_URL = 'dashboard'
+# ACCOUNT_LOGOUT_ON_GET = True

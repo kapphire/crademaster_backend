@@ -57,12 +57,13 @@
                       {{ form.remember|add_class:"form-check-input" }}
                       <label class="form-check-label" for="rememberMe">Remember me</label>
                     </div>
-                    {{form.errors}}
                     {% if form.errors %}
                         <div class="text-danger">
-                            {% for error in form.errors %}
-                                <p>{{ error }}</p>
-                            {% endfor %}
+                          {% for field_name, error_list in form.errors.items %}
+                              {% for error in error_list %}
+                                  <p>{{ error }}</p>
+                              {% endfor %}
+                          {% endfor %}
                         </div>
                     {% endif %}
                 
@@ -90,7 +91,7 @@
           <p class="mb-0 text-secondary">
             Copyright © <script>
               document.write(new Date().getFullYear())
-            </script> Soft by Creative Tim.
+            </script>
           </p>
         </div>
       </div>
