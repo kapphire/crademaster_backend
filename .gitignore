@@ -10,7 +10,6 @@ local_settings.py
 db.sqlite3
 
 # Django static files
-/static/
 /media/
 
 # Virtual environment files

@@ -237,3 +237,5 @@ CORS_ALLOW_METHODS = [
 ]
 
 CSRF_COOKIE_NAME = "csrftoken"
+
+LOGIN_REDIRECT_URL  = 'dashboard'
