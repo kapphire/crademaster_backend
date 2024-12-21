@@ -27,6 +27,9 @@ class CustomRegisterView(RegisterView):
 class CustomLoginView(LoginView):
     form_class = CustomLoginForm
 
+    def get_success_url(self):
+        return settings.LOGIN_REDIRECT_URL
+
 
 class PlaceholderView(TemplateView):
     template_name = "account/placeholder.html"
