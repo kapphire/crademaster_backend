@@ -2,7 +2,7 @@ from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
 
-from allauth.account.views import LoginView
+from allauth.account.views import LoginView, LogoutView
 from dj_rest_auth.registration.views import RegisterView
 
 from .forms import CustomLoginForm
@@ -29,6 +29,12 @@ class CustomLoginView(LoginView):
 
     def get_success_url(self):
         return settings.LOGIN_REDIRECT_URL
+    
+
+class CustomLogoutView(LogoutView):
+
+    def get_success_url(self):
+        return settings.LOGOUT_REDIRECT_URL
 
 
 class PlaceholderView(TemplateView):

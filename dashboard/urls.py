@@ -1,5 +1,5 @@
 from allauth.account.views import logout
-from authentication.views import CustomLoginView, PlaceholderView
+from authentication.views import CustomLoginView, PlaceholderView, CustomLogoutView
 
 from django.urls import path
 from .views import DashboardView
