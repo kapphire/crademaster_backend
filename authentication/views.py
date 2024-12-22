@@ -29,12 +29,6 @@ class CustomLoginView(LoginView):
 
     def get_success_url(self):
         return settings.LOGIN_REDIRECT_URL
-    
-
-class CustomLogoutView(LogoutView):
-
-    def get_success_url(self):
-        return settings.LOGOUT_REDIRECT_URL
 
 
 class PlaceholderView(TemplateView):

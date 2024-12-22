@@ -16,11 +16,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic.base import RedirectView
 
+from allauth.account.views import logout
+from authentication.views import CustomLoginView, PlaceholderView
 
 urlpatterns = [
     # path('accounts/', include('allauth.urls')),
+    path('', RedirectView.as_view(url='dashboard', permanent=False)),
     path('auth/', include('authentication.urls')),
+
+    path('accounts/login/', CustomLoginView.as_view(), name='account_login'),
+    path('accounts/signup/', PlaceholderView.as_view(), name="account_signup"),
+    path('logout/', logout, name="account_logout"),
+
     path('investments/', include('investments.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('admin/', admin.site.urls),

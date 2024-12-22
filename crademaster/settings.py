@@ -208,12 +208,10 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 ACCOUNT_LOGOUT_ON_GET = True
-LOGIN_URL = 'accounts/login/'
 
-# LOGIN_REDIRECT_URL  = 'dashboard'
-# LOGOUT_REDIRECT_URL = 'dashboard'
-LOGIN_REDIRECT_URL  = '/'
-LOGOUT_REDIRECT_URL = '/'
+# LOGIN_URL = 'accounts/login/'
+LOGIN_REDIRECT_URL = '/dashboard/'
+# LOGOUT_REDIRECT_URL = '/dashboard/'
 
 
 EMAIL_BACKEND = 'anymail.backends.mailgun.EmailBackend'
