@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import InvestmentListCreateAPIView
+# from .views import InvestmentListCreateAPIView
 
 urlpatterns = [
-    path('', InvestmentListCreateAPIView.as_view(), name='investment-list-create'),
+    # path('', InvestmentListCreateAPIView.as_view(), name='investment-list-create'),
 ]

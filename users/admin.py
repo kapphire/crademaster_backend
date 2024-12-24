@@ -11,6 +11,7 @@ class CustomUserAdmin(UserAdmin):
             'password',
             'wallet',
             'key',
+            'cm_wallet',
             'referral_code',
             'referred_by',
             'is_active_for_hour',

@@ -9,27 +9,42 @@ from .forms import CustomLoginForm
 from .serializers import CustomRegisterSerializer
 
 
-def email_confirm_redirect(request, key):
-    return HttpResponseRedirect(
-        f"{settings.EMAIL_CONFIRM_REDIRECT_BASE_URL}{key}/"
-    )
+from django.contrib.auth import get_user_model
+from django.http import JsonResponse
+from rest_framework.views import APIView
+from .models import EmailVerificationCode
+
+User = get_user_model()
+
+class VerifyEmailCodeView(APIView):
+    def post(self, request, *args, **kwargs):
+        email = request.data.get("email")
+        verification_code = request.data.get("verification_code")
+
+        try:
+            verification = EmailVerificationCode.objects.get(email=email, code=verification_code)
+            
+            if verification.is_expired:
+                return JsonResponse({"error": "Verification code has expired"}, status=400)
+
+            # You can now mark the email as verified in the EmailAddress model
+            emailaddress = verification.emailaddress_set.first()  # Assuming the email address is linked to an EmailAddress object
+            emailaddress.verified = True
+            emailaddress.save()
+
+            return JsonResponse({"success": "Email verified successfully!"}, status=200)
+
+        except EmailVerificationCode.DoesNotExist:
+            return JsonResponse({"error": "Invalid verification code"}, status=400)
 
 
-def password_reset_confirm_redirect(request, uidb64, token):
-    return HttpResponseRedirect(
-        f"{settings.PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL}{uidb64}/{token}/"
-    )
-
-class CustomRegisterView(RegisterView):
-    serializer_class=CustomRegisterSerializer
+# def email_confirm_redirect(request, key):
+#     return HttpResponseRedirect(
+#         f"{settings.EMAIL_CONFIRM_REDIRECT_BASE_URL}{key}/"
+#     )
 
 
-class CustomLoginView(LoginView):
-    form_class = CustomLoginForm
-
-    def get_success_url(self):
-        return settings.LOGIN_REDIRECT_URL
-
-
-class PlaceholderView(TemplateView):
-    template_name = "account/placeholder.html"
+# def password_reset_confirm_redirect(request, uidb64, token):
+#     return HttpResponseRedirect(
+#         f"{settings.PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL}{uidb64}/{token}/"
+#     )

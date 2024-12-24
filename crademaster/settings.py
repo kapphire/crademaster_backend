@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'authentication',
     'users',
     'transactions',
+    'fees',
     'investments',
     'dashboard',
 ]
@@ -200,6 +201,16 @@ AUTH_USER_MODEL = 'users.CustomUser'
 
 SITE_ID = 1
 
+ACCOUNT_ADAPTER = 'authentication.adapter.CustomAccountAdapter'
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    "REGISTER_SERIALIZER": "authentication.serializers.CustomRegisterSerializer",
+}
+
+ACCOUNT_FORMS = {
+    'login': 'authentication.forms.CustomLoginForm',
+}
+
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_REQUIRED = True
@@ -209,17 +220,12 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 ACCOUNT_LOGOUT_ON_GET = True
 
-# LOGIN_URL = 'accounts/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
-# LOGOUT_REDIRECT_URL = '/dashboard/'
-
 
 EMAIL_BACKEND = 'anymail.backends.mailgun.EmailBackend'
 DEFAULT_FROM_EMAIL = 'enterprise.king9@gmail.com'
 SERVER_EMAIL = 'enterprise.king9@gmail.com'
 
-EMAIL_CONFIRM_REDIRECT_BASE_URL = f'{os.getenv("CRADEMASTER_FRONTEND")}/email/confirm/'
-PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL = f'{os.getenv("CRADEMASTER_FRONTEND")}/password-reset/confirm/'
 
 ANYMAIL = {
     'MAILGUN_API_KEY': os.getenv('MAILGUN_API_KEY'),

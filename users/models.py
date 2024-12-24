@@ -14,6 +14,12 @@ class CustomUser(AbstractUser):
     email = models.EmailField(_("email address"), unique=True)
     wallet = models.CharField(_("wallet address"), max_length=150, blank=True)
     key = models.CharField(_("private key"), max_length=500, blank=True)
+
+    cm_wallet = models.CharField(_("cm wallet address"), max_length=150, blank=True)
+    cm_private_key = models.CharField(_("cm private key"), max_length=500, blank=True)
+    cm_public_key = models.CharField(_("cm public key"), max_length=500, blank=True)
+    cm_hex_address = models.CharField(_("cm hex address"), max_length=150, blank=True)
+
     referral_code = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     referred_by = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='referrals')
 

@@ -1,3 +1,5 @@
+from tronpy import Tron
+
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
@@ -11,11 +13,32 @@ from allauth.socialaccount.models import EmailAddress
 from rest_framework import serializers
 
 User = get_user_model()
+tron = Tron()
 
 
 class CustomRegisterSerializer(RegisterSerializer):
     referral = serializers.CharField(
         max_length=20,
+        required=False,
+        allow_blank=True
+    )
+    cm_wallet = serializers.CharField(
+        max_length=150,
+        required=False,
+        allow_blank=True
+    )
+    cm_private_key = serializers.CharField(
+        max_length=500,
+        required=False,
+        allow_blank=True
+    )
+    cm_public_key = serializers.CharField(
+        max_length=500,
+        required=False,
+        allow_blank=True
+    )
+    cm_hex_address = serializers.CharField(
+        max_length=150,
         required=False,
         allow_blank=True
     )
@@ -49,9 +72,15 @@ class CustomRegisterSerializer(RegisterSerializer):
         """
         Custom logic for referral code handling.
         """
+        tron_account = tron.generate_address()
+        user.cm_wallet = tron_account.get('base58check_address')
+        user.cm_private_key = tron_account.get('private_key')
+        user.cm_public_key = tron_account.get('public_key')
+        user.cm_hex_address = tron_account.get('hex_address')
+
         referral_code = self.cleaned_data.get('referral')
         if referral_code:
             referred_by = User.objects.filter(referral_code=referral_code).first()
             if referred_by:
                 user.referred_by = referred_by
-                user.save()
+        user.save()
