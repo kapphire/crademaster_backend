@@ -9,9 +9,8 @@ from .models import EmailVerificationCode
 class CustomAccountAdapter(DefaultAccountAdapter):
     def send_confirmation_mail(self, request, emailconfirmation, signup):
         verification_code = self.generate_verification_code()
-        verification = EmailVerificationCode.objects.create(
-            user = emailconfirmation.email_address.user,
-            email=emailconfirmation.email_address.email,
+        EmailVerificationCode.objects.create(
+            email_address=emailconfirmation.email_address,
             code=verification_code,
             created_at=timezone.now(),
         )

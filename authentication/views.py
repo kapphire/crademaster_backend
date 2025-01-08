@@ -1,34 +1,26 @@
-from django.conf import settings
-from django.http import HttpResponseRedirect
-from django.views.generic import TemplateView
-
-from allauth.account.views import LoginView, LogoutView
-from dj_rest_auth.registration.views import RegisterView
-
-from .forms import CustomLoginForm
-from .serializers import CustomRegisterSerializer
-
-
-from django.contrib.auth import get_user_model
 from django.http import JsonResponse
+
+from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
+
 from .models import EmailVerificationCode
 
-User = get_user_model()
 
 class VerifyEmailCodeView(APIView):
+    permission_classes = [AllowAny]
+
     def post(self, request, *args, **kwargs):
         email = request.data.get("email")
         verification_code = request.data.get("verification_code")
 
         try:
-            verification = EmailVerificationCode.objects.get(email=email, code=verification_code)
+            verification = EmailVerificationCode.objects.get(email_address__email=email, code=verification_code)
             
             if verification.is_expired:
                 return JsonResponse({"error": "Verification code has expired"}, status=400)
 
             # You can now mark the email as verified in the EmailAddress model
-            emailaddress = verification.emailaddress_set.first()  # Assuming the email address is linked to an EmailAddress object
+            emailaddress = verification.email_address
             emailaddress.verified = True
             emailaddress.save()
 
