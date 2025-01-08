@@ -1,6 +1,4 @@
-from django.contrib.sites.shortcuts import get_current_site
 from django.utils.crypto import get_random_string
-from django.utils import timezone
 
 from allauth.account.adapter import DefaultAccountAdapter
 
@@ -9,10 +7,11 @@ from .models import EmailVerificationCode
 class CustomAccountAdapter(DefaultAccountAdapter):
     def send_confirmation_mail(self, request, emailconfirmation, signup):
         verification_code = self.generate_verification_code()
-        EmailVerificationCode.objects.create(
+        EmailVerificationCode.objects.update_or_create(
             email_address=emailconfirmation.email_address,
-            code=verification_code,
-            created_at=timezone.now(),
+            defaults={
+                'code': verification_code,
+            }
         )
 
         ctx = {

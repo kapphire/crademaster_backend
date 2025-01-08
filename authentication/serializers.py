@@ -7,7 +7,6 @@ from dj_rest_auth.registration.serializers import RegisterSerializer
 
 from allauth.account import app_settings as allauth_account_settings
 from allauth.account.adapter import get_adapter
-from allauth.account.utils import send_email_confirmation
 from allauth.socialaccount.models import EmailAddress
 
 from rest_framework import serializers
@@ -54,18 +53,20 @@ class CustomRegisterSerializer(RegisterSerializer):
     def validate_email(self, email):
         email = get_adapter().clean_email(email)
         if allauth_account_settings.UNIQUE_EMAIL:
-            if email and EmailAddress.objects.is_verified(email):
+            if EmailAddress.objects.is_verified(email):
                 raise serializers.ValidationError(
                     _('A user is already registered with this e-mail address.'),
                 )
             
             existing_email = EmailAddress.objects.filter(email=email).first()
-            if email and existing_email and not existing_email.verified:                
-                send_email_confirmation(self.context.get('request'), existing_email.user)
-                raise serializers.ValidationError(
-                    _('This e-mail address is already registered but not verified. '
-                        'A new verification email has been sent to your inbox.')
-                )
+            if existing_email and not existing_email.verified:
+                existing_email.send_confirmation(self.context.get('request'))
+                self.context['resend'] = existing_email.user
+
+            #     raise serializers.ValidationError(
+            #         _('This e-mail address is already registered but not verified. '
+            #             'A new verification email has been sent to your inbox.')
+            #     )
         return email
     
     def custom_signup(self, request, user):
@@ -84,3 +85,8 @@ class CustomRegisterSerializer(RegisterSerializer):
             if referred_by:
                 user.referred_by = referred_by
         user.save()
+
+    def save(self, request):
+        if self.context.get('resend'):
+            return self.context.get('resend')
+        return super().save(request)

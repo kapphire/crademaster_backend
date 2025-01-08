@@ -54,12 +54,11 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework_simplejwt.token_blacklist',
 
-    'dj_rest_auth',
-
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
 
+    'dj_rest_auth',
     'dj_rest_auth.registration',
 
     'anymail',

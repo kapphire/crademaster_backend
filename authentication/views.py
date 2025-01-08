@@ -1,9 +1,14 @@
 from django.http import JsonResponse
+from dj_rest_auth.registration.views import RegisterView
 
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
 from .models import EmailVerificationCode
+from .serializers import CustomRegisterSerializer
+
+class CustomRegisterView(RegisterView):
+    serializer_class = CustomRegisterSerializer
 
 
 class VerifyEmailCodeView(APIView):
