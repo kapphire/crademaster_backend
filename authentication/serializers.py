@@ -21,7 +21,7 @@ USDT_CONTRACT_ADDRESS = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"
 
 class CustomRegisterSerializer(RegisterSerializer):
     referral = serializers.CharField(
-        max_length=20,
+        max_length=100,
         required=False,
         allow_blank=True
     )
@@ -109,6 +109,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
         fields = [
             'email',
             'cm_wallet',
+            'referral_code',
             'activate_duration',
             'is_active_for_while',
             'total_usage',

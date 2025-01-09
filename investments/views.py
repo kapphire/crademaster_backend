@@ -18,6 +18,7 @@ from .serializers import UsageSerializer
 #         user = self.request.user
 #         return Investment.objects.filter(user=user)
 
+
 class UsageCreateAPIView(generics.CreateAPIView):
     serializer_class = UsageSerializer
     permission_classes = [IsAuthenticated]

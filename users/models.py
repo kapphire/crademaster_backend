@@ -65,8 +65,8 @@ class CustomUser(AbstractUser):
 
         try:
             fee = Fee.objects.filter(min_investment__lte=balance, max_investment__gte=balance).first()
-            return fee.hours
-        except Fee.DoesNotExist:
+            return getattr(fee, 'hours', 0)
+        except Exception as e:
             return 0
     
     @property
@@ -103,9 +103,8 @@ class CustomUser(AbstractUser):
     
     def calculate_elapsed(self):
         usage = self.usage_set.first()
-        time_difference = timezone.now() - usage.created
 
-        if usage.created.date() == datetime.today().date():
-            elapsed = time_difference.total_seconds()
-            return elapsed
-        return 0
+        if not usage or usage.created.date() != datetime.today().date():
+            return 0
+        elapsed = (timezone.now() - usage.created).total_seconds()
+        return elapsed
