@@ -58,8 +58,8 @@ class CustomUser(AbstractUser):
             balance = contract.functions.balanceOf(self.cm_wallet)
             balance_in_usdt = balance / (10 ** 6)
         except AddressNotFound:
-            balance = 0
-        return balance_in_usdt
+            balance_in_usdt = 0
+        return 35000
     
     @property
     def activation(self):
