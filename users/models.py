@@ -86,7 +86,7 @@ class CustomUser(AbstractUser):
         
         time_difference = timezone.now() - last_usage.created
 
-        if time_difference.total_seconds() / 3600 < self.activation.duration:
+        if time_difference.total_seconds() / 3600 < self.activation.get('duration'):
             return False
 
         return True
