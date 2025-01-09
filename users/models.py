@@ -8,7 +8,7 @@ from tronpy.exceptions import AddressNotFound
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
-from django.utils.timezone import localtime
+from django.utils.timezone import localtime, now
 from django.utils.translation import gettext_lazy as _
 
 from .managers import CustomUserManager
@@ -93,13 +93,13 @@ class CustomUser(AbstractUser):
         total_duration = 0
         usages = self.usage_set.all().order_by('created')
 
-        now = localtime(datetime.now())
+        current_time = localtime(now())
 
         for usage in usages:
             created_time = localtime(usage.created)
 
-            if created_time.date() == now.date():
-                time_difference = (now - created_time).total_seconds() / 3600
+            if created_time.date() == current_time.date():
+                time_difference = (current_time - created_time).total_seconds() / 3600
             else:
                 end_of_day = created_time.replace(hour=23, minute=59, second=59, microsecond=999999)
                 time_difference = (end_of_day - created_time).total_seconds() / 3600
