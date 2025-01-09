@@ -93,11 +93,16 @@ class CustomUser(AbstractUser):
         total_duration = 0
         usages = self.usage_set.all().order_by('created')
 
+        now = localtime(datetime.now())
+
         for usage in usages:
             created_time = localtime(usage.created)
-            end_of_day = created_time.replace(hour=23, minute=59, second=59, microsecond=999999)
 
-            time_difference = (end_of_day - created_time).total_seconds() / 3600
+            if created_time.date() == now.date():
+                time_difference = (now - created_time).total_seconds() / 3600
+            else:
+                end_of_day = created_time.replace(hour=23, minute=59, second=59, microsecond=999999)
+                time_difference = (end_of_day - created_time).total_seconds() / 3600
 
             total_duration += min(time_difference, usage.duration)
 
