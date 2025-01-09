@@ -1,6 +1,5 @@
 from tronpy import Tron
 from tronpy.providers import HTTPProvider
-from tronpy.exceptions import AddressNotFound
 
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
@@ -12,6 +11,8 @@ from allauth.account.adapter import get_adapter
 from allauth.socialaccount.models import EmailAddress
 
 from rest_framework import serializers
+
+from users.serializers import ReferredUserSerializer
 
 tron = Tron(provider=HTTPProvider(api_key="679bbd65-8f55-4427-86a2-e4a4250be584"))
 User = get_user_model()
@@ -103,6 +104,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     is_active_for_while = serializers.SerializerMethodField()
     total_usage = serializers.SerializerMethodField()
     elapsed = serializers.SerializerMethodField()
+    referred_users = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -114,6 +116,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
             'is_active_for_while',
             'total_usage',
             'elapsed',
+            'referred_users',
             'usdt_balance',
             'tron_balance',
         ]
@@ -135,3 +138,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     
     def get_elapsed(self, obj):
         return obj.calculate_elapsed()
+    
+    def get_referred_users(self, obj):
+        referred_users = User.objects.filter(referred_by=obj)
+        return ReferredUserSerializer(referred_users, many=True).data

@@ -33,6 +33,8 @@ class CustomUser(AbstractUser):
     referral_code = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     referred_by = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='referrals')
 
+    created = models.DateTimeField(auto_now_add=True)
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 

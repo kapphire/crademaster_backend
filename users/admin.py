@@ -17,9 +17,6 @@ class CustomUserAdmin(UserAdmin):
             'cm_hex_address',
             'referral_code',
             'referred_by',
-            'is_active_for_hour',
-            'last_activated',
-            'total_enabled_time',
             
         )}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),

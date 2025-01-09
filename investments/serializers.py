@@ -37,17 +37,20 @@ class UsageSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'amount', 'duration', 'created']
         read_only_fields = ['id', 'user', 'amount', 'duration', 'created']
 
-    def validate(self, attrs):
+    def validate(self, data):
         """
         Validate that the user can create a Usage record only once per day.
         """
         user = self.context['request'].user
         today = now().date()
 
+        if user.get_usdt_balance == 0:
+            raise serializers.ValidationError("Your USDT balance is zero. Please deposit funds to proceed.")
+
         if Usage.objects.filter(user=user, created__date=today).exists():
             raise serializers.ValidationError("You can only activate the platform once per day.")
 
-        return attrs
+        return data
 
     def create(self, validated_data):
         user = validated_data.get('user')

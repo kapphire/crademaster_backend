@@ -21,12 +21,14 @@ from django.views.generic.base import RedirectView, TemplateView
 from allauth.account.views import LoginView, LogoutView
 
 from investments.views import UsageCreateAPIView
+from transactions.views import WithdrawCreateAPIView
 
 
 urlpatterns = [
     path('', RedirectView.as_view(url='dashboard', permanent=False)),
     path('auth/', include('authentication.urls')),
     path('api/activate/', UsageCreateAPIView.as_view(), name='usage_create'),
+    path('api/withdraw/', WithdrawCreateAPIView.as_view(), name='withdraw_create'),
 
     path('accounts/login/', LoginView.as_view(), name='account_login'),
     path('accounts/signup/', TemplateView.as_view(), name="account_signup"),
