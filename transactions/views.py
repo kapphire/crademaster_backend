@@ -1,4 +1,5 @@
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, DeleteView
+from django.urls import reverse_lazy
 
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
@@ -26,3 +27,9 @@ class WithdrawDetailView(StaffRequiredMixin, DetailView):
     model = Withdraw
     template_name = 'transactions/withdraw_detail.html'
     context_object_name = 'withdraw'
+
+
+class WithdrawDeleteView(StaffRequiredMixin, DeleteView):
+    model = Withdraw
+    template_name = 'transactions/withdraw_confirm_delete.html'
+    success_url = reverse_lazy('withdraw_list')

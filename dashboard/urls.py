@@ -1,7 +1,11 @@
 from django.urls import path, include
 
 from .views import DashboardView
-from transactions.views import WithdrawListView, WithdrawDetailView
+from transactions.views import (
+    WithdrawListView,
+    WithdrawDetailView,
+    WithdrawDeleteView
+)
 
 urlpatterns = [
     path('', DashboardView.as_view(), name='dashboard'),
@@ -9,4 +13,5 @@ urlpatterns = [
     path('user/', include('users.urls')),
     path('withdraw/', WithdrawListView.as_view(), name="withdraw_list"),
     path('withdraw/<int:pk>/', WithdrawDetailView.as_view(), name="withdraw_detail"),
+    path('withdraw/<int:pk>/delete/', WithdrawDeleteView.as_view(), name='withdraw_delete'),
 ]
