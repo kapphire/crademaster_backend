@@ -5,7 +5,7 @@ class WithdrawSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Withdraw
-        fields = ['id', 'user', 'amount', 'status', 'requested_at', 'completed_at']
+        fields = ['id', 'user', 'amount', 'address', 'status', 'requested_at', 'completed_at']
         read_only_fields = ['id', 'user', 'status', 'requested_at', 'completed_at']
 
     def validate(self, data):

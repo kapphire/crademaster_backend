@@ -19,6 +19,7 @@
                 <h6 class="mb-3 text-sm">{{ withdraw.user.email }}</h6>
                 <span class="mb-2 text-xs">Deposit: <span class="text-dark font-weight-bold ms-sm-2">{{ withdraw.user.get_usdt_balance }} USDT</span></span>
                 <span class="mb-2 text-xs">Amount: <span class="text-dark font-weight-bold ms-sm-2">{{ withdraw.amount }} USDT</span></span>
+                <span class="mb-2 text-xs">Address: <span class="text-dark ms-sm-2 font-weight-bold">{{ withdraw.address }}</span></span>
                 <span class="mb-2 text-xs">Status: <span class="text-dark ms-sm-2 font-weight-bold">{{ withdraw.status }}</span></span>
                 <span class="mb-2 text-xs">Requested At: <span class="text-dark ms-sm-2 font-weight-bold">{{ withdraw.requested_at }}</span></span>
                 <span class="mb-2 text-xs">Completed At: <span class="text-dark ms-sm-2 font-weight-bold">{{ withdraw.completed_at|default_if_none:"" }}</span></span>
