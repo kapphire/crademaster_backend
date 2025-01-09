@@ -45,11 +45,13 @@
   <script src="{% static 'assets/js/plugins/chartjs.min.js' %}"></script>
   <script>
     var ctx = document.getElementById("chart-bars").getContext("2d");
+    var monthlyUsers = {{ user_counts|safe }};
+    var months = {{ months|safe }};
 
     new Chart(ctx, {
       type: "bar",
       data: {
-        labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        labels: months,
         datasets: [{
           label: "Sales",
           tension: 0.4,
@@ -57,7 +59,7 @@
           borderRadius: 4,
           borderSkipped: false,
           backgroundColor: "#fff",
-          data: [450, 200, 100, 220, 500, 100, 400, 230, 500],
+          data: monthlyUsers,
           maxBarThickness: 6
         }, ],
       },

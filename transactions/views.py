@@ -6,10 +6,20 @@ from rest_framework.permissions import IsAuthenticated
 
 from authentication.mixins import StaffRequiredMixin
 from .models import Withdraw
-from .serializers import WithdrawSerializer
+from .serializers import WithdrawSerializer, DepositSerializer
+
 
 class WithdrawCreateAPIView(generics.CreateAPIView):
     serializer_class = WithdrawSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        user = self.request.user
+        serializer.save(user=user)
+
+
+class DepositCreateAPIView(generics.CreateAPIView):
+    serializer_class = DepositSerializer
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):

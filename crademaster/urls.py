@@ -21,7 +21,7 @@ from django.views.generic.base import RedirectView, TemplateView
 from allauth.account.views import LoginView, LogoutView
 
 from investments.views import UsageCreateAPIView
-from transactions.views import WithdrawCreateAPIView
+from transactions.views import WithdrawCreateAPIView, DepositCreateAPIView
 from users.views import UserDetailAPIView
 
 
@@ -31,6 +31,7 @@ urlpatterns = [
     path('api/user-details/', UserDetailAPIView.as_view(), name='user_details'),
     path('api/activate/', UsageCreateAPIView.as_view(), name='usage_create'),
     path('api/withdraw/', WithdrawCreateAPIView.as_view(), name='withdraw_create'),
+    path('api/deposit/', DepositCreateAPIView.as_view(), name='deposit_create'),
 
     path('accounts/login/', LoginView.as_view(), name='account_login'),
     path('accounts/signup/', TemplateView.as_view(), name="account_signup"),

@@ -9,7 +9,7 @@ class ReferredUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'created', 'earning']
+        fields = ['email', 'date_joined', 'earning']
 
     def get_earning(self, obj):
         return 0
