@@ -44,6 +44,7 @@ class Withdraw(models.Model):
         ('CANCELLED', _('Cancelled')),
         ('FAILED', _('Failed')),
     ]
+    address = models.CharField(_("wallet address"), max_length=150, blank=True)
     status = models.CharField(_("status"), max_length=10, choices=status_choices, default='PENDING')
     requested_at = models.DateTimeField(_("requested at"), auto_now_add=True)
     completed_at = models.DateTimeField(_("completed at"), null=True, blank=True)
