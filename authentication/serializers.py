@@ -110,19 +110,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
         ]
 
     def get_tron_balance(self, obj):
-        try:
-            balance = tron.get_account_balance("THAnMs85N6mcNbKuUbAX826eymbmB7uQs2")
-        except AddressNotFound:
-            # raise ValueError("Invalid TRON address or address does not exist")
-            balance = 0
-        return balance
+        return obj.get_tron_balance
     
     def get_usdt_balance(self, obj):
-        try:
-            contract = tron.get_contract(USDT_CONTRACT_ADDRESS)
-            balance = contract.functions.balanceOf("THAnMs85N6mcNbKuUbAX826eymbmB7uQs2")
-            balance_in_usdt = balance / (10 ** 6)
-        except AddressNotFound:
-            # raise ValueError("Invalid TRON address or address does not exist")
-            balance = 0
-        return balance_in_usdt
+        return obj.get_usdt_balance

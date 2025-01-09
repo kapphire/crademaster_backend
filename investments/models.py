@@ -14,3 +14,13 @@ class Investment(models.Model):
 
     def __str__(self):
         return f"Investment from {self.user.email} is ${self.amount}"
+
+
+class Usage(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.IntegerField()
+    fee = models.ForeignKey(Fee, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Usage from {self.user.email} is ${self.amount}"
