@@ -1,4 +1,6 @@
 from tronpy import Tron
+from tronpy.providers import HTTPProvider
+from tronpy.exceptions import AddressNotFound
 
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
@@ -11,8 +13,10 @@ from allauth.socialaccount.models import EmailAddress
 
 from rest_framework import serializers
 
+tron = Tron(provider=HTTPProvider(api_key="679bbd65-8f55-4427-86a2-e4a4250be584"))
 User = get_user_model()
-tron = Tron()
+
+USDT_CONTRACT_ADDRESS = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"
 
 
 class CustomRegisterSerializer(RegisterSerializer):
@@ -90,3 +94,35 @@ class CustomRegisterSerializer(RegisterSerializer):
         if self.context.get('resend'):
             return self.context.get('resend')
         return super().save(request)
+
+
+class CustomUserSerializer(serializers.ModelSerializer):
+    usdt_balance = serializers.SerializerMethodField()
+    tron_balance = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = [
+            'email',
+            'cm_wallet',
+            'usdt_balance',
+            'tron_balance',
+        ]
+
+    def get_tron_balance(self, obj):
+        try:
+            balance = tron.get_account_balance("THAnMs85N6mcNbKuUbAX826eymbmB7uQs2")
+        except AddressNotFound:
+            # raise ValueError("Invalid TRON address or address does not exist")
+            balance = 0
+        return balance
+    
+    def get_usdt_balance(self, obj):
+        try:
+            contract = tron.get_contract(USDT_CONTRACT_ADDRESS)
+            balance = contract.functions.balanceOf("THAnMs85N6mcNbKuUbAX826eymbmB7uQs2")
+            balance_in_usdt = balance / (10 ** 6)
+        except AddressNotFound:
+            # raise ValueError("Invalid TRON address or address does not exist")
+            balance = 0
+        return balance_in_usdt

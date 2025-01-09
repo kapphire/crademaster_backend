@@ -144,6 +144,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_AUTH = {
+    'USE_JWT': True,
+    'TOKEN_MODEL': None,
+    'USER_DETAILS_SERIALIZER': 'authentication.serializers.CustomUserSerializer',
+}
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -153,19 +159,12 @@ REST_FRAMEWORK = {
     ),
 }
 
-REST_USE_JWT = True
-
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'AUTH_HEADER_TYPES': ('Bearer',),
-}
-
-REST_AUTH = {
-    'USE_JWT': True,
-    'TOKEN_MODEL': None,
 }
 
 # Internationalization
@@ -201,10 +200,6 @@ AUTH_USER_MODEL = 'users.CustomUser'
 SITE_ID = 1
 
 ACCOUNT_ADAPTER = 'authentication.adapter.CustomAccountAdapter'
-
-REST_AUTH_REGISTER_SERIALIZERS = {
-    "REGISTER_SERIALIZER": "authentication.serializers.CustomRegisterSerializer",
-}
 
 ACCOUNT_FORMS = {
     'login': 'authentication.forms.CustomLoginForm',
