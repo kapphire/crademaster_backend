@@ -1,5 +1,6 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
-class DashboardView(LoginRequiredMixin, TemplateView):
+from authentication.mixins import StaffRequiredMixin
+
+class DashboardView(StaffRequiredMixin, TemplateView):
     template_name = 'dashboard/dashboard.html'

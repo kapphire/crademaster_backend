@@ -29,6 +29,11 @@
                   </div>
 
                   <div class="mb-3">
+                    <label for="{{ form.hours.id_for_label }}" class="form-label">Duration</label>
+                    {{ form.hours|add_class:"form-control" }}
+                  </div>
+
+                  <div class="mb-3">
                     <label for="{{ form.fee_percentage.id_for_label }}" class="form-label">Fee Percentage</label>
                     {{ form.fee_percentage|add_class:"form-control" }}
                   </div>

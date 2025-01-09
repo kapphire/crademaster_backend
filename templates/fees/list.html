@@ -19,6 +19,7 @@
                     <tr>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Min Investment</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Max Investiment</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Duration</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Fee Percentage</th>
                       <th class="text-secondary opacity-7"></th>
                     </tr>
@@ -34,10 +35,13 @@
                                 <span class="badge badge-sm bg-gradient-success">{{ fee.max_investment }} USDT</span>
                             </td>
                             <td class="align-middle text-center">
+                              <span class="text-secondary text-xs font-weight-bold">{{ fee.hours }} hours</span>
+                            </td>
+                            <td class="align-middle text-center">
                                 <span class="text-secondary text-xs font-weight-bold">{{ fee.fee_percentage }} %</span>
                             </td>
                             <td class="align-middle">
-                                <a href="{% url 'fee_update' fee.id %}" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                                <a href="{% url 'fee_update' fee.id %}" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit fee">
                                 Edit
                                 </a>
                             </td>

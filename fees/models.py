@@ -7,5 +7,8 @@ class Fee(models.Model):
     fee_percentage = models.DecimalField(max_digits=50, decimal_places=2)
     hours = models.PositiveIntegerField(default=0)
 
+    class Meta:
+        ordering = ['min_investment']
+
     def __str__(self):
         return f"Fee from {self.min_investment} to {self.max_investment} is {self.fee_percentage}%"
