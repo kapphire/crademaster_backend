@@ -1,5 +1,5 @@
 import uuid
-from datetime import timedelta
+from datetime import datetime
 
 from tronpy import Tron
 from tronpy.providers import HTTPProvider
@@ -7,7 +7,8 @@ from tronpy.exceptions import AddressNotFound
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.utils.timezone import now
+from django.utils import timezone
+from django.utils.timezone import localtime
 from django.utils.translation import gettext_lazy as _
 
 from .managers import CustomUserManager
@@ -31,9 +32,6 @@ class CustomUser(AbstractUser):
 
     referral_code = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     referred_by = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='referrals')
-
-    # last_activated = models.DateTimeField(null=True, blank=True)
-    # total_enabled_time = models.DurationField(default=timedelta())
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -73,10 +71,41 @@ class CustomUser(AbstractUser):
     
     @property
     def is_active_for_while(self):
-        if now() - self.last_activated > self.activate_duration:
-            return True
-        return False
+        last_usage = self.usage_set.first()
 
-    def activate(self):
-        self.last_activated = now()
-        self.save()
+        if not last_usage:
+            return True
+        
+        time_difference = timezone.now() - last_usage.created
+
+        if time_difference.total_seconds() / 3600 < self.activate_duration:
+            return False
+
+        return True
+    
+    def calculate_total_usage(self):
+        """
+        Calculate the total usage hours for this user.
+        Each record's duration is calculated from created to the end of the day.
+        """
+        total_duration = 0
+        usages = self.usage_set.all().order_by('created')
+
+        for usage in usages:
+            created_time = localtime(usage.created)
+            end_of_day = created_time.replace(hour=23, minute=59, second=59, microsecond=999999)
+
+            time_difference = (end_of_day - created_time).total_seconds() / 3600
+
+            total_duration += min(time_difference, usage.duration)
+
+        return total_duration
+    
+    def calculate_elapsed(self):
+        usage = self.usage_set.first()
+        time_difference = timezone.now() - usage.created
+
+        if usage.created.date() == datetime.today().date():
+            elapsed = time_difference.total_seconds()
+            return elapsed
+        return 0

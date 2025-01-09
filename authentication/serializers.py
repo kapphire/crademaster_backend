@@ -99,12 +99,20 @@ class CustomRegisterSerializer(RegisterSerializer):
 class CustomUserSerializer(serializers.ModelSerializer):
     usdt_balance = serializers.SerializerMethodField()
     tron_balance = serializers.SerializerMethodField()
+    activate_duration = serializers.SerializerMethodField()
+    is_active_for_while = serializers.SerializerMethodField()
+    total_usage = serializers.SerializerMethodField()
+    elapsed = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = [
             'email',
             'cm_wallet',
+            'activate_duration',
+            'is_active_for_while',
+            'total_usage',
+            'elapsed',
             'usdt_balance',
             'tron_balance',
         ]
@@ -114,3 +122,15 @@ class CustomUserSerializer(serializers.ModelSerializer):
     
     def get_usdt_balance(self, obj):
         return obj.get_usdt_balance
+    
+    def get_activate_duration(self, obj):
+        return obj.activate_duration
+    
+    def get_is_active_for_while(self, obj):
+        return obj.is_active_for_while
+    
+    def get_total_usage(self, obj):
+        return obj.calculate_total_usage()
+    
+    def get_elapsed(self, obj):
+        return obj.calculate_elapsed()
