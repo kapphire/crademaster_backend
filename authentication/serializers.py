@@ -100,7 +100,7 @@ class CustomRegisterSerializer(RegisterSerializer):
 class CustomUserSerializer(serializers.ModelSerializer):
     usdt_balance = serializers.SerializerMethodField()
     tron_balance = serializers.SerializerMethodField()
-    activate_duration = serializers.SerializerMethodField()
+    activation = serializers.SerializerMethodField()
     is_active_for_while = serializers.SerializerMethodField()
     total_usage = serializers.SerializerMethodField()
     elapsed = serializers.SerializerMethodField()
@@ -112,7 +112,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
             'email',
             'cm_wallet',
             'referral_code',
-            'activate_duration',
+            'activation',
             'is_active_for_while',
             'total_usage',
             'elapsed',
@@ -127,8 +127,8 @@ class CustomUserSerializer(serializers.ModelSerializer):
     def get_usdt_balance(self, obj):
         return obj.get_usdt_balance
     
-    def get_activate_duration(self, obj):
-        return obj.activate_duration
+    def get_activation(self, obj):
+        return obj.activation
     
     def get_is_active_for_while(self, obj):
         return obj.is_active_for_while

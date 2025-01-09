@@ -44,7 +44,8 @@ class CustomUser(AbstractUser):
     @property
     def get_tron_balance(self):
         try:
-            balance = tron.get_account_balance("THAnMs85N6mcNbKuUbAX826eymbmB7uQs2")
+            # balance = tron.get_account_balance("THAnMs85N6mcNbKuUbAX826eymbmB7uQs2")
+            balance = tron.get_account_balance(self.cm_wallet)
         except AddressNotFound:
             balance = 0
         return balance
@@ -53,21 +54,28 @@ class CustomUser(AbstractUser):
     def get_usdt_balance(self):
         try:
             contract = tron.get_contract(USDT_CONTRACT_ADDRESS)
-            balance = contract.functions.balanceOf("THAnMs85N6mcNbKuUbAX826eymbmB7uQs2")
+            # balance = contract.functions.balanceOf("THAnMs85N6mcNbKuUbAX826eymbmB7uQs2")
+            balance = contract.functions.balanceOf(self.cm_wallet)
             balance_in_usdt = balance / (10 ** 6)
         except AddressNotFound:
             balance = 0
-        return 35000
+        return balance_in_usdt
     
     @property
-    def activate_duration(self):
+    def activation(self):
         balance = self.get_usdt_balance
 
         try:
             fee = Fee.objects.filter(min_investment__lte=balance, max_investment__gte=balance).first()
-            return getattr(fee, 'hours', 0)
-        except Exception as e:
-            return 0
+            return {
+                "percent": fee.fee_percentage,
+                "duration": fee.hours
+            }
+        except Exception:
+            return {
+                "percent": 0,
+                "duration": 0
+            }
     
     @property
     def is_active_for_while(self):
@@ -78,7 +86,7 @@ class CustomUser(AbstractUser):
         
         time_difference = timezone.now() - last_usage.created
 
-        if time_difference.total_seconds() / 3600 < self.activate_duration:
+        if time_difference.total_seconds() / 3600 < self.activation.duration:
             return False
 
         return True
