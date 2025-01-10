@@ -59,7 +59,7 @@ class CustomUser(AbstractUser):
             balance_in_usdt = balance / (10 ** 6)
         except AddressNotFound:
             balance_in_usdt = 0
-        return 35000
+        return balance_in_usdt
     
     @property
     def activation(self):
