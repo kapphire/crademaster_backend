@@ -36,5 +36,5 @@ class ExecuteSerializer(serializers.ModelSerializer):
         if not applicable_fee:
             raise serializers.ValidationError("No fee found for the given investment amount.")
 
-        usage = Execute.objects.create(duration=applicable_fee.hours, user=user, amount=amount, profit_percent=user.profit_percent)
-        return usage
+        execute = Execute.objects.create(duration=applicable_fee.hours, user=user, amount=amount, profit_percent=user.profit_percent)
+        return execute

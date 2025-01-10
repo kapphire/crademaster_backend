@@ -14,6 +14,7 @@ from django.utils.translation import gettext_lazy as _
 from .managers import CustomUserManager
 
 from fees.models import Fee
+from fees.serializers import FeeSerializer
 
 tron = Tron(provider=HTTPProvider(api_key="679bbd65-8f55-4427-86a2-e4a4250be584"))
 USDT_CONTRACT_ADDRESS = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"
@@ -66,56 +67,50 @@ class CustomUser(AbstractUser):
     @property
     def availability(self):
         balance = self.get_usdt_balance
-
         try:
-            fee = Fee.objects.filter(min_investment__lte=balance, max_investment__gte=balance).first()
-            return {
-                "percent": fee.fee_percentage,
-                "duration": fee.hours
-            }
+            fee = Fee.get_fee_for_balance(balance)
+            if fee:
+                serializer = FeeSerializer(fee)
+                return serializer.data
+            return FeeSerializer(None).data
         except Exception:
-            return {
-                "percent": 0,
-                "duration": 0
-            }
+            return FeeSerializer(None).data
     
     @property
     def is_program_active(self):
-        last_usage = self.usage_set.first()
+        last_execute = self.execute_set.first()
 
-        if not last_usage:
+        if not last_execute:
             return True
         
-        time_difference = timezone.now() - last_usage.created
+        time_difference = timezone.now() - last_execute.created
 
-        if time_difference.total_seconds() / 3600 < self.availability.get('duration'):
+        if time_difference.total_seconds() // 3600 < self.availability.get('duration'):
             return False
 
         return True
     
-    def calculate_total_usage(self):
+    def calculate_total_execute(self):
         total_duration = 0
-        usages = self.usage_set.all().order_by('created')
-
+        executes = self.execute_set.all().order_by('created')
         current_time = localtime(now())
 
-        for usage in usages:
-            created_time = localtime(usage.created)
+        for execute in executes:
+            created_time = localtime(execute.created)
 
             if created_time.date() == current_time.date():
-                time_difference = (current_time - created_time).total_seconds() / 3600
+                time_difference = (current_time - created_time).total_seconds()
             else:
                 end_of_day = created_time.replace(hour=24, minute=59, second=59, microsecond=999999)
-                time_difference = (end_of_day - created_time).total_seconds() / 3600
+                time_difference = (end_of_day - created_time).total_seconds()
 
-            total_duration += min(time_difference, usage.duration)
-
+            total_duration += min(time_difference, execute.duration)
         return total_duration
     
     def calculate_elapsed(self):
-        usage = self.usage_set.first()
+        execute = self.execute_set.first()
 
-        if not usage or usage.created.date() != datetime.today().date():
+        if not execute or execute.created.date() != datetime.today().date():
             return 0
-        elapsed = (timezone.now() - usage.created).total_seconds()
+        elapsed = (timezone.now() - execute.created).total_seconds()
         return elapsed

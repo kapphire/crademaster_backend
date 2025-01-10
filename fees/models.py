@@ -12,3 +12,8 @@ class Fee(models.Model):
 
     def __str__(self):
         return f"Fee from {self.min_investment} to {self.max_investment} is {self.fee_percentage}%"
+
+    @staticmethod
+    def get_fee_for_balance(balance):
+        fee = Fee.objects.filter(min_investment__lte=balance, max_investment__gte=balance).first()
+        return fee
