@@ -1,4 +1,5 @@
-from django.views.generic.list import ListView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, UpdateView
 
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
@@ -26,3 +27,14 @@ class UserListView(StaffRequiredMixin, ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset.exclude(is_staff=True)
+
+
+class UserUpdateView(StaffRequiredMixin, UpdateView):
+    model = CustomUser
+    fields = ['profit_percent']
+    template_name = 'users/update.html'
+    context_object_name = 'user'
+    success_url = reverse_lazy('user_list')
+
+    def get_object(self):
+        return CustomUser.objects.get(id=self.kwargs['pk'])

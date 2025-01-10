@@ -20,7 +20,7 @@ from django.views.generic.base import RedirectView, TemplateView
 
 from allauth.account.views import LoginView, LogoutView
 
-from investments.views import UsageCreateAPIView
+from executes.views import ExecuteCreateAPIView
 from transactions.views import WithdrawCreateAPIView, DepositCreateAPIView
 from users.views import UserDetailAPIView
 
@@ -29,7 +29,7 @@ urlpatterns = [
     path('', RedirectView.as_view(url='dashboard', permanent=False)),
     path('auth/', include('authentication.urls')),
     path('api/user-details/', UserDetailAPIView.as_view(), name='user_details'),
-    path('api/activate/', UsageCreateAPIView.as_view(), name='usage_create'),
+    path('api/activate/', ExecuteCreateAPIView.as_view(), name='usage_create'),
     path('api/withdraw/', WithdrawCreateAPIView.as_view(), name='withdraw_create'),
     path('api/deposit/', DepositCreateAPIView.as_view(), name='deposit_create'),
 

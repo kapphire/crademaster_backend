@@ -64,7 +64,7 @@ class CustomUser(AbstractUser):
         return balance_in_usdt
     
     @property
-    def activation(self):
+    def availability(self):
         balance = self.get_usdt_balance
 
         try:
@@ -80,7 +80,7 @@ class CustomUser(AbstractUser):
             }
     
     @property
-    def is_active_for_while(self):
+    def is_program_active(self):
         last_usage = self.usage_set.first()
 
         if not last_usage:
@@ -88,16 +88,12 @@ class CustomUser(AbstractUser):
         
         time_difference = timezone.now() - last_usage.created
 
-        if time_difference.total_seconds() / 3600 < self.activation.get('duration'):
+        if time_difference.total_seconds() / 3600 < self.availability.get('duration'):
             return False
 
         return True
     
     def calculate_total_usage(self):
-        """
-        Calculate the total usage hours for this user.
-        Each record's duration is calculated from created to the end of the day.
-        """
         total_duration = 0
         usages = self.usage_set.all().order_by('created')
 
@@ -109,7 +105,7 @@ class CustomUser(AbstractUser):
             if created_time.date() == current_time.date():
                 time_difference = (current_time - created_time).total_seconds() / 3600
             else:
-                end_of_day = created_time.replace(hour=23, minute=59, second=59, microsecond=999999)
+                end_of_day = created_time.replace(hour=24, minute=59, second=59, microsecond=999999)
                 time_difference = (end_of_day - created_time).total_seconds() / 3600
 
             total_duration += min(time_difference, usage.duration)
