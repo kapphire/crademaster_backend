@@ -31,13 +31,13 @@
                     {% for withdraw in withdraws %}
                         <tr>
                             <td>
-                                <a href="{% url 'withdraw_detail' withdraw.id %}"><span class="" style="color: rgb(79, 79, 194); text-decoration: underline;">{{ withdraw.user }}</span></a>
+                                <a href="{% url 'withdraw_detail' withdraw.id %}"><span class="text-info text-xs font-weight-bold">{{ withdraw.user }}</span></a>
                             </td>
                             <td class="align-middle text-center text-sm">
-                                <span class="">{{ withdraw.user.get_usdt_balance }} USDT</span>
+                                <span class="text-secondary text-xs font-weight-bold">{{ withdraw.user.get_usdt_balance }} USDT</span>
                             </td>
                             <td class="align-middle text-center text-sm">
-                                <span class="">{{ withdraw.amount }} USDT</span>
+                                <span class="text-secondary text-xs font-weight-bold">{{ withdraw.amount }} USDT</span>
                             </td>
                             <td class="align-middle text-center">
                               <span class="text-secondary text-xs font-weight-bold">{{ withdraw.address }}</span>
@@ -52,7 +52,7 @@
                                 <span class="text-secondary text-xs font-weight-bold">{{ withdraw.completed_at|default_if_none:"" }}</span>
                             </td>
                             <td class="align-middle">
-                              <a href="{% url 'withdraw_detail' withdraw.id %}" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit fee">
+                              <a href="{% url 'withdraw_detail' withdraw.id %}" class="text-info font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit fee">
                               Edit
                               </a>
                           </td>

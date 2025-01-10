@@ -25,6 +25,7 @@ class Usage(models.Model):
     http_user_agent = models.CharField(max_length=40, null=True, blank=True)  # HTTP_USER_AGENT
     http_referer = models.CharField(max_length=40, null=True, blank=True)  # HTTP_REFERER
     http_x_forwarded_for = models.CharField(max_length=100, null=True, blank=True) # HTTP_X_FORWARDED_FOR
+    profit_percent = models.DecimalField(max_digits=10, decimal_places=2, default=0.2)
     created = models.DateTimeField(default=now)
 
     class Meta:

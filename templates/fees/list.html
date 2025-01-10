@@ -27,8 +27,7 @@
                   <tbody>
                     {% for fee in fees %}
                         <tr>
-                            <td>
-                                <!-- <p class="text-xs font-weight-bold mb-0">{{ fee.min_investment }} USDT</p> -->
+                            <td class="align-middle text-sm">
                                 <span class="badge badge-sm bg-gradient-success">{{ fee.min_investment }} USDT</span>
                             </td>
                             <td class="align-middle text-center text-sm">
@@ -41,7 +40,7 @@
                                 <span class="text-secondary text-xs font-weight-bold">{{ fee.fee_percentage }} %</span>
                             </td>
                             <td class="align-middle">
-                                <a href="{% url 'fee_update' fee.id %}" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit fee">
+                                <a href="{% url 'fee_update' fee.id %}" class="text-info font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit fee">
                                 Edit
                                 </a>
                             </td>

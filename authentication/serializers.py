@@ -112,6 +112,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
             'email',
             'cm_wallet',
             'referral_code',
+            'profit_percent',
             'activation',
             'is_active_for_while',
             'total_usage',

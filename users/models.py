@@ -30,6 +30,8 @@ class CustomUser(AbstractUser):
     cm_public_key = models.CharField(_("cm public key"), max_length=500, blank=True)
     cm_hex_address = models.CharField(_("cm hex address"), max_length=150, blank=True)
 
+    profit_percent = models.DecimalField(max_digits=10, decimal_places=2, default=0.2)
+
     referral_code = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     referred_by = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='referrals')
 

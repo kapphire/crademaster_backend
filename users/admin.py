@@ -15,6 +15,7 @@ class CustomUserAdmin(UserAdmin):
             'cm_private_key',
             'cm_public_key',
             'cm_hex_address',
+            'profit_percent',
             'referral_code',
             'referred_by',
             
