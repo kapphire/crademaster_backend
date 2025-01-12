@@ -22,7 +22,7 @@ from allauth.account.views import LoginView, LogoutView
 
 from executes.views import ExecuteCreateAPIView
 from transactions.views import WithdrawCreateAPIView
-from users.views import UserDetailAPIView
+from users.views import UserDetailAPIView, IDFileUploadView
 
 
 urlpatterns = [
@@ -31,6 +31,7 @@ urlpatterns = [
     path('api/user-details/', UserDetailAPIView.as_view(), name='user_details'),
     path('api/activate/', ExecuteCreateAPIView.as_view(), name='execute_create'),
     path('api/withdraw/', WithdrawCreateAPIView.as_view(), name='withdraw_create'),
+    path('api/upload/', IDFileUploadView.as_view(), name='id_file_upload'),
 
     path('accounts/login/', LoginView.as_view(), name='account_login'),
     path('accounts/signup/', TemplateView.as_view(), name="account_signup"),

@@ -1,3 +1,5 @@
+from decimal import Decimal, ROUND_HALF_UP
+
 from django.views.generic import (
     ListView, DetailView, DeleteView, UpdateView
 )
@@ -9,10 +11,11 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 
 from authentication.mixins import StaffRequiredMixin
+from fees.models import RoyaltyFee
+
 from .models import Transaction
 from .serializers import DepositSerializer, WithdrawSerializer
 from .handler import trx_transfer_usdt
-
 
 class DepositListView(StaffRequiredMixin, ListView):
     model = Transaction
@@ -81,6 +84,37 @@ class WithdrawDeleteView(StaffRequiredMixin, DeleteView):
     model = Transaction
     template_name = 'transactions/withdraw_confirm_delete.html'
     success_url = reverse_lazy('withdraw_list')
+
+
+class WithdrawApproveView(StaffRequiredMixin, UpdateView):
+    model = Transaction
+    fields = []
+    template_name = 'transactions/withdraw_approve.html'
+    context_object_name = 'withdraw'
+    success_url = reverse_lazy('withdraw_list')
+
+    def get_object(self):
+        return Transaction.objects.get(id=self.kwargs['pk'])
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        instance.status = 'COMPLETED'
+
+        if instance.royalty:
+            royalty_fee = RoyaltyFee.get_fee_for_balance(instance.user.get_deposit_balance)
+            royalty_amount = (instance.amount * royalty_fee.fee_percentage / 100).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+            deposit_data = {
+                'user': instance.royalty.pk,
+                'amount': royalty_amount,
+                'transaction_type': 'ROYALTY',
+                'status': 'SUCCESS'
+            }
+            deposit_serializer = DepositSerializer(data=deposit_data)
+            deposit_serializer.is_valid(raise_exception=True)
+            deposit_serializer.save()
+        instance.save()
+
+        return super().form_valid(form)
 
 
 # API views

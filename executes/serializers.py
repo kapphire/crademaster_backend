@@ -19,7 +19,7 @@ class ExecuteSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         today = now().date()
 
-        if user.get_balance < 50:
+        if user.get_deposit_balance < 50:
             raise serializers.ValidationError("Your USDT balance is insufficient. Please ensure your balance is greater than 50 USDT to proceed.")
 
         if Execute.objects.filter(user=user, created__date=today).exists():
@@ -29,7 +29,7 @@ class ExecuteSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = validated_data.get('user')
-        amount = user.get_balance
+        amount = user.get_deposit_balance
 
         applicable_fee = Fee.objects.filter(min_investment__lte=amount, max_investment__gte=amount).first()
 

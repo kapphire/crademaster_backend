@@ -6,6 +6,7 @@ from .views import (
     WithdrawListView,
     WithdrawDetailView,
     WithdrawDeleteView,
+    WithdrawApproveView,
 )
 
 urlpatterns = [
@@ -15,5 +16,6 @@ urlpatterns = [
 
     path('withdraw/', WithdrawListView.as_view(), name="withdraw_list"),
     path('withdraw/<int:pk>/', WithdrawDetailView.as_view(), name="withdraw_detail"),
+    path('withdraw/<int:pk>/approve/', WithdrawApproveView.as_view(), name="withdraw_approve"),
     path('withdraw/<int:pk>/delete/', WithdrawDeleteView.as_view(), name='withdraw_delete'),
 ]

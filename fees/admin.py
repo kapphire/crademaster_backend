@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Fee
+from .models import Fee, RoyaltyFee
 
 
 class FeeAdmin(admin.ModelAdmin):
@@ -11,3 +11,4 @@ class FeeAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Fee, FeeAdmin)
+admin.site.register(RoyaltyFee)

@@ -7,6 +7,7 @@ class Transaction(models.Model):
     TRANSACTION_TYPES = [
         ('DEPOSIT', _('Deposit')),
         ('WITHDRAWAL', _('Withdrawal')),
+        ('ROYALTY', _('Royalty')),
     ]
     STATUS_CHOICES = [
         ('PENDING', _('Pending')),
@@ -23,24 +24,10 @@ class Transaction(models.Model):
     completed_at = models.DateTimeField(_("completed at"), null=True, blank=True)
     description = models.TextField(_("description"), blank=True, null=True)
     address = models.CharField(_("wallet address"), max_length=150, blank=True, null=True)
+    royalty = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='royalties', blank=True, null=True)
 
     def __str__(self):
         return f"{self.transaction_type} {self.id} - {self.user.email} - {self.status}"
-
-    @property
-    def is_completed(self):
-        return self.status == 'COMPLETED'
-
-    def complete_transaction(self):
-        """Set status to completed and add any logic for completing the transaction."""
-        self.status = 'COMPLETED'
-        self.completed_at = models.DateTimeField(auto_now=True)
-        self.save()
-
-    def cancel_transaction(self):
-        """Cancel the transaction if needed."""
-        self.status = 'CANCELLED'
-        self.save()
 
     def save(self, *args, **kwargs):
         if self.transaction_type == 'WITHDRAWAL' and not self.address:

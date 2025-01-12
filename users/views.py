@@ -7,16 +7,8 @@ from rest_framework.permissions import IsAuthenticated
 from authentication.mixins import StaffRequiredMixin
 from authentication.serializers import CustomUserSerializer
 
-from .models import CustomUser
-
-
-class UserDetailAPIView(generics.RetrieveAPIView):
-    queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_object(self):
-        return self.request.user
+from .models import CustomUser, IDFile
+from .serializers import UploadedFilesSerializer
 
 
 class UserListView(StaffRequiredMixin, ListView):
@@ -38,3 +30,22 @@ class UserUpdateView(StaffRequiredMixin, UpdateView):
 
     def get_object(self):
         return CustomUser.objects.get(id=self.kwargs['pk'])
+
+
+# API view
+
+class UserDetailAPIView(generics.RetrieveAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+    
+
+class IDFileUploadView(generics.CreateAPIView):
+    serializer_class = UploadedFilesSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save()

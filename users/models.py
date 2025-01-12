@@ -51,7 +51,7 @@ class CustomUser(AbstractUser):
     
     @property
     def get_balance(self):
-        return self.get_deposit_balance - self.get_withdrawal_balance
+        return self.get_deposit_balance - self.get_withdrawal_balance + self.get_royalty_balance
 
     @property
     def get_deposit_balance(self):
@@ -63,6 +63,14 @@ class CustomUser(AbstractUser):
         total_amount = total_deposit['total_deposit_amount'] or 0
         balance = self.get_usdt_balance
         return total_amount + balance
+
+    @property
+    def get_royalty_balance(self):
+        total_royalty = self.transactions.filter(
+            transaction_type='ROYALTY',
+        ).aggregate(total_roaylty_amount=Sum('amount'))
+
+        return total_royalty['total_roaylty_amount'] or 0
 
     @property
     def get_withdrawal_balance(self):
@@ -97,7 +105,7 @@ class CustomUser(AbstractUser):
     def availability(self):
         balance = self.get_balance
         try:
-            fee = Fee.get_fee_for_balance(balance)
+            fee = Fee.get_deposit_balance(balance)
             if fee:
                 serializer = FeeSerializer(fee)
                 return serializer.data
@@ -143,3 +151,10 @@ class CustomUser(AbstractUser):
             return 0
         elapsed = (timezone.now() - execute.created).total_seconds()
         return elapsed
+
+
+class IDFile(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    front = models.FileField(upload_to='uploads/')
+    back = models.FileField(upload_to='uploads/')
+    created = models.DateTimeField(auto_now_add=True)
