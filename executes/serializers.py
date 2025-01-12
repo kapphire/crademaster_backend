@@ -38,3 +38,14 @@ class ExecuteSerializer(serializers.ModelSerializer):
 
         execute = Execute.objects.create(duration=applicable_fee.hours, user=user, amount=amount, profit_percent=user.profit_percent)
         return execute
+    
+
+class ExecuteHistorySerializer(serializers.ModelSerializer):
+    profit = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Execute
+        fields = ['amount', 'profit', 'created']
+
+    def get_profit(self, obj):
+        return obj.get_profit()

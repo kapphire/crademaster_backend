@@ -16,7 +16,7 @@ from django.utils.translation import gettext_lazy as _
 
 from .managers import CustomUserManager
 
-from fees.models import Fee
+from fees.models import Fee, RoyaltyFee
 from fees.serializers import FeeSerializer
 
 # tron = Tron(provider=HTTPProvider(api_key="679bbd65-8f55-4427-86a2-e4a4250be584"))
@@ -62,7 +62,7 @@ class CustomUser(AbstractUser):
 
         total_amount = total_deposit['total_deposit_amount'] or 0
         balance = self.get_usdt_balance
-        return total_amount + balance
+        return float(total_amount) + float(balance)
 
     @property
     def get_royalty_balance(self):
@@ -103,9 +103,9 @@ class CustomUser(AbstractUser):
 
     @property
     def availability(self):
-        balance = self.get_balance
+        balance = self.get_deposit_balance
         try:
-            fee = Fee.get_deposit_balance(balance)
+            fee = Fee.get_fee_for_balance(balance)
             if fee:
                 serializer = FeeSerializer(fee)
                 return serializer.data

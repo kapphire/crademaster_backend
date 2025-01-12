@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.timezone import now
 
+from fees.models import RoyaltyFee
+
 User = get_user_model()
 
 
@@ -24,8 +26,12 @@ class Execute(models.Model):
     
     def get_profit(self):
         profit = self.amount * self.duration * self.profit_percent / 100
-        return profit
+        return profit - profit * self.get_platform_fee() / 100
     
     def get_platform_fee(self):
-        amount = self.get_profit()
-        return amount
+        fee = RoyaltyFee.get_fee_for_balance(self.amount)
+        return fee.fee_percentage
+
+    def get_platform_fee_amount(self):
+        profit = self.amount * self.duration * self.profit_percent / 100
+        return profit * self.get_platform_fee() / 100

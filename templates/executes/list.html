@@ -19,6 +19,7 @@
                     <tr>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">User</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Profit</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Platform Fee</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Duration</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Amount</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Profit Percent</th>
@@ -38,6 +39,9 @@
                             </td>
                             <td class="align-middle text-center text-sm">
                                 <span class="text-secondary text-xs font-weight-bold">{{ execute.get_profit }} USDT</span>
+                            </td>
+                            <td class="align-middle text-center text-sm">
+                              <span class="text-secondary text-xs font-weight-bold">{{ execute.get_platform_fee_amount }} USDT</span>
                             </td>
                             <td class="align-middle text-center text-sm">
                                 <span class="text-secondary text-xs font-weight-bold">{{ execute.duration }} hours</span>

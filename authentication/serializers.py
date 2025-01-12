@@ -13,6 +13,9 @@ from allauth.socialaccount.models import EmailAddress
 from rest_framework import serializers
 
 from users.serializers import ReferredUserSerializer
+from executes.serializers import ExecuteHistorySerializer
+
+from executes.models import Execute
 
 tron = Tron(provider=HTTPProvider(api_key="679bbd65-8f55-4427-86a2-e4a4250be584"))
 User = get_user_model()
@@ -106,6 +109,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     total_execute = serializers.SerializerMethodField()
     elapsed = serializers.SerializerMethodField()
     referred_users = serializers.SerializerMethodField()
+    executes = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -122,6 +126,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
             'usdt_balance',
             'tron_balance',
             'total_balance',
+            'executes',
         ]
 
     def get_total_balance(self, obj):
@@ -148,3 +153,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     def get_referred_users(self, obj):
         referred_users = User.objects.filter(referred_by=obj)
         return ReferredUserSerializer(referred_users, many=True).data
+    
+    def get_executes(self, obj):
+        executes = Execute.objects.filter(user=obj)
+        return ExecuteHistorySerializer(executes, many=True).data
