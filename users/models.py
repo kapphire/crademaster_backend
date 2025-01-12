@@ -1,4 +1,6 @@
+import math
 import uuid
+
 from datetime import datetime
 
 from tronpy import Tron
@@ -7,6 +9,7 @@ from tronpy.exceptions import AddressNotFound
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models import Sum, Q
 from django.utils import timezone
 from django.utils.timezone import localtime, now
 from django.utils.translation import gettext_lazy as _
@@ -16,9 +19,11 @@ from .managers import CustomUserManager
 from fees.models import Fee
 from fees.serializers import FeeSerializer
 
-tron = Tron(provider=HTTPProvider(api_key="679bbd65-8f55-4427-86a2-e4a4250be584"))
-USDT_CONTRACT_ADDRESS = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"
+# tron = Tron(provider=HTTPProvider(api_key="679bbd65-8f55-4427-86a2-e4a4250be584"))
+tron = Tron(network='nile')
 
+# USDT_CONTRACT_ADDRESS = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"
+USDT_CONTRACT_ADDRESS = "TXYZopYRdj2D9XRtbG411XZZ3kM5VkAeBf"
 
 class CustomUser(AbstractUser):
     username = None
@@ -45,6 +50,30 @@ class CustomUser(AbstractUser):
         return self.email
     
     @property
+    def get_balance(self):
+        return self.get_deposit_balance - self.get_withdrawal_balance
+
+    @property
+    def get_deposit_balance(self):
+        total_deposit = self.transactions.filter(
+            transaction_type='DEPOSIT',
+            status='COMPLETED'
+        ).aggregate(total_deposit_amount=Sum('amount'))
+
+        total_amount = total_deposit['total_deposit_amount'] or 0
+        balance = self.get_usdt_balance
+        return total_amount + balance
+
+    @property
+    def get_withdrawal_balance(self):
+        total_withdraw = self.transactions.filter(
+            transaction_type='WITHDRAWAL',
+            status='COMPLETED'
+        ).aggregate(total_withdraw_amount=Sum('amount'))
+
+        return total_withdraw['total_withdraw_amount'] or 0
+
+    @property
     def get_tron_balance(self):
         try:
             # balance = tron.get_account_balance("THAnMs85N6mcNbKuUbAX826eymbmB7uQs2")
@@ -52,7 +81,7 @@ class CustomUser(AbstractUser):
         except AddressNotFound:
             balance = 0
         return balance
-    
+
     @property
     def get_usdt_balance(self):
         try:
@@ -63,10 +92,10 @@ class CustomUser(AbstractUser):
         except AddressNotFound:
             balance_in_usdt = 0
         return balance_in_usdt
-    
+
     @property
     def availability(self):
-        balance = self.get_usdt_balance
+        balance = self.get_balance
         try:
             fee = Fee.get_fee_for_balance(balance)
             if fee:
@@ -75,7 +104,7 @@ class CustomUser(AbstractUser):
             return FeeSerializer(None).data
         except Exception:
             return FeeSerializer(None).data
-    
+
     @property
     def is_program_active(self):
         last_execute = self.execute_set.first()
@@ -85,11 +114,11 @@ class CustomUser(AbstractUser):
         
         time_difference = timezone.now() - last_execute.created
 
-        if time_difference.total_seconds() // 3600 < self.availability.get('duration'):
+        if time_difference.total_seconds() // 3600 < self.availability.get('hours'):
             return False
 
         return True
-    
+
     def calculate_total_execute(self):
         total_duration = 0
         executes = self.execute_set.all().order_by('created')
@@ -101,12 +130,12 @@ class CustomUser(AbstractUser):
             if created_time.date() == current_time.date():
                 time_difference = (current_time - created_time).total_seconds()
             else:
-                end_of_day = created_time.replace(hour=24, minute=59, second=59, microsecond=999999)
+                end_of_day = created_time.replace(hour=23, minute=59, second=59)
                 time_difference = (end_of_day - created_time).total_seconds()
 
-            total_duration += min(time_difference, execute.duration)
-        return total_duration
-    
+            total_duration += min(time_difference, execute.duration * 3600)
+        return math.ceil(total_duration)
+
     def calculate_elapsed(self):
         execute = self.execute_set.first()
 

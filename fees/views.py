@@ -18,5 +18,4 @@ class FeeUpdateView(StaffRequiredMixin, UpdateView):
     success_url = reverse_lazy('fee_list')
 
     def get_object(self):
-        # You can customize how to get the object (user) if needed.
         return Fee.objects.get(id=self.kwargs['pk'])

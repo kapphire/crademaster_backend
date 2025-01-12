@@ -100,6 +100,7 @@ class CustomRegisterSerializer(RegisterSerializer):
 class CustomUserSerializer(serializers.ModelSerializer):
     usdt_balance = serializers.SerializerMethodField()
     tron_balance = serializers.SerializerMethodField()
+    total_balance = serializers.SerializerMethodField()
     availability = serializers.SerializerMethodField()
     is_program_active = serializers.SerializerMethodField()
     total_execute = serializers.SerializerMethodField()
@@ -120,7 +121,11 @@ class CustomUserSerializer(serializers.ModelSerializer):
             'referred_users',
             'usdt_balance',
             'tron_balance',
+            'total_balance',
         ]
+
+    def get_total_balance(self, obj):
+        return obj.get_balance
 
     def get_tron_balance(self, obj):
         return obj.get_tron_balance

@@ -21,3 +21,11 @@ class Execute(models.Model):
 
     def __str__(self):
         return f"Execute from {self.user.email} is ${self.amount}"
+    
+    def get_profit(self):
+        profit = self.amount * self.duration * self.profit_percent / 100
+        return profit
+    
+    def get_platform_fee(self):
+        amount = self.get_profit()
+        return amount
