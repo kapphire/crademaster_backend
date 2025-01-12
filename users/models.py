@@ -150,7 +150,7 @@ class CustomUser(AbstractUser):
         if not execute or execute.created.date() != datetime.today().date():
             return 0
         elapsed = (timezone.now() - execute.created).total_seconds()
-        return elapsed
+        return min(elapsed, 3600 * self.availability.get("hours"))
 
 
 class IDFile(models.Model):
