@@ -1,5 +1,6 @@
 {% extends "dashboard/base.html" %}
 {% load static %}
+{% load custom_filters %}
 
 {% block title %}
     Crademaster withdraws
@@ -44,7 +45,7 @@
                               <span class="text-secondary text-xs font-weight-bold">{{ execute.get_platform_fee_amount }} USDT</span>
                             </td>
                             <td class="align-middle text-center text-sm">
-                                <span class="text-secondary text-xs font-weight-bold">{{ execute.duration }} hours</span>
+                                <span class="text-secondary text-xs font-weight-bold">{{ execute.get_duration|seconds_to_hms }}</span>
                             </td>
                             <td class="align-middle text-center text-sm">
                                 <span class="text-secondary text-xs font-weight-bold">{{ execute.amount }} USDT</span>

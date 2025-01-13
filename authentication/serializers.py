@@ -105,7 +105,6 @@ class CustomUserSerializer(serializers.ModelSerializer):
     tron_balance = serializers.SerializerMethodField()
     total_balance = serializers.SerializerMethodField()
     availability = serializers.SerializerMethodField()
-    is_program_active = serializers.SerializerMethodField()
     total_execute = serializers.SerializerMethodField()
     elapsed = serializers.SerializerMethodField()
     referred_users = serializers.SerializerMethodField()
@@ -119,7 +118,6 @@ class CustomUserSerializer(serializers.ModelSerializer):
             'referral_code',
             'profit_percent',
             'availability',
-            'is_program_active',
             'total_execute',
             'elapsed',
             'referred_users',
@@ -140,10 +138,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     
     def get_availability(self, obj):
         return obj.availability
-    
-    def get_is_program_active(self, obj):
-        return obj.is_program_active
-    
+
     def get_total_execute(self, obj):
         return obj.calculate_total_execute()
     

@@ -52,6 +52,11 @@ class CustomUser(AbstractUser):
     @property
     def get_balance(self):
         return self.get_deposit_balance - self.get_withdrawal_balance + self.get_royalty_balance
+    
+    @property
+    def get_profits(self):
+        executes = self.execute_set.all().order_by('created')
+        
 
     @property
     def get_deposit_balance(self):
@@ -113,35 +118,12 @@ class CustomUser(AbstractUser):
         except Exception:
             return FeeSerializer(None).data
 
-    @property
-    def is_program_active(self):
-        last_execute = self.execute_set.first()
-
-        if not last_execute:
-            return True
-        
-        time_difference = timezone.now() - last_execute.created
-
-        if time_difference.total_seconds() // 3600 < self.availability.get('hours'):
-            return False
-
-        return True
-
     def calculate_total_execute(self):
         total_duration = 0
         executes = self.execute_set.all().order_by('created')
-        current_time = localtime(now())
 
         for execute in executes:
-            created_time = localtime(execute.created)
-
-            if created_time.date() == current_time.date():
-                time_difference = (current_time - created_time).total_seconds()
-            else:
-                end_of_day = created_time.replace(hour=23, minute=59, second=59)
-                time_difference = (end_of_day - created_time).total_seconds()
-
-            total_duration += min(time_difference, execute.duration * 3600)
+            total_duration += execute.get_duration()
         return math.ceil(total_duration)
 
     def calculate_elapsed(self):
