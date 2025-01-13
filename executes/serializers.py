@@ -42,10 +42,14 @@ class ExecuteSerializer(serializers.ModelSerializer):
 
 class ExecuteHistorySerializer(serializers.ModelSerializer):
     profit = serializers.SerializerMethodField()
+    get_platform_fee_amount = serializers.SerializerMethodField()
 
     class Meta:
         model = Execute
-        fields = ['amount', 'profit', 'created']
+        fields = ['amount', 'profit', 'get_platform_fee_amount', 'created']
 
     def get_profit(self, obj):
         return obj.get_profit()
+    
+    def get_platform_fee_amount(self, obj):
+        return obj.get_platform_fee_amount()

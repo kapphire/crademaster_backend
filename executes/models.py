@@ -35,12 +35,12 @@ class Execute(models.Model):
             end_of_day = created_time.replace(hour=23, minute=59, second=59)
             time_difference = (end_of_day - created_time).total_seconds()
         return min(time_difference, self.duration * 3600)
-    
+
     def get_profit(self):
         duration = self.get_duration()
         profit = self.amount * duration / 3600 * float(self.profit_percent) / 100
         return math.ceil(profit - self.get_platform_fee_amount())
-    
+
     def get_platform_fee(self):
         fee = RoyaltyFee.get_fee_for_balance(self.amount)
         return fee.fee_percentage

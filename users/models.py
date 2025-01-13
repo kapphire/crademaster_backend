@@ -51,12 +51,15 @@ class CustomUser(AbstractUser):
     
     @property
     def get_balance(self):
-        return self.get_deposit_balance - self.get_withdrawal_balance + self.get_royalty_balance
-    
+        return self.get_deposit_balance - self.get_withdrawal_balance + self.get_royalty_balance + self.get_profits
+
     @property
     def get_profits(self):
+        total_profits = 0
         executes = self.execute_set.all().order_by('created')
-        
+        for execute in executes:
+            total_profits += execute.get_profit()
+        return total_profits        
 
     @property
     def get_deposit_balance(self):
