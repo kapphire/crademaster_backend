@@ -100,6 +100,13 @@ class WithdrawApproveView(StaffRequiredMixin, UpdateView):
         instance = form.save(commit=False)
         instance.status = 'COMPLETED'
 
+        tx = trx_transfer_usdt(
+            instance.user.cm_wallet,
+            instance.user.cm_private_key,
+            self.request.user.cm_wallet,
+            instance.amount
+        )
+
         if instance.royalty:
             royalty_fee = RoyaltyFee.get_fee_for_balance(instance.user.get_deposit_balance)
             royalty_amount = (instance.amount * royalty_fee.fee_percentage / 100).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
@@ -107,7 +114,7 @@ class WithdrawApproveView(StaffRequiredMixin, UpdateView):
                 'user': instance.royalty.pk,
                 'amount': royalty_amount,
                 'transaction_type': 'ROYALTY',
-                'status': 'SUCCESS'
+                'status': 'COMPLETED'
             }
             deposit_serializer = DepositSerializer(data=deposit_data)
             deposit_serializer.is_valid(raise_exception=True)

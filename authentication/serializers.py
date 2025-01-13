@@ -104,6 +104,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     usdt_balance = serializers.SerializerMethodField()
     tron_balance = serializers.SerializerMethodField()
     total_balance = serializers.SerializerMethodField()
+    total_profits = serializers.SerializerMethodField()
     availability = serializers.SerializerMethodField()
     total_execute = serializers.SerializerMethodField()
     elapsed = serializers.SerializerMethodField()
@@ -124,11 +125,15 @@ class CustomUserSerializer(serializers.ModelSerializer):
             'usdt_balance',
             'tron_balance',
             'total_balance',
+            'total_profits',
             'executes',
         ]
 
     def get_total_balance(self, obj):
         return obj.get_balance
+    
+    def get_total_profits(self, obj):
+        return obj.get_profits
 
     def get_tron_balance(self, obj):
         return obj.get_tron_balance

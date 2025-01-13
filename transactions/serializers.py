@@ -24,10 +24,10 @@ class WithdrawSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         if Transaction.objects.filter(user=user, status='PENDING').exists():
             raise serializers.ValidationError("You already have a pending withdrawal request.")
-        
+
         if data['amount'] > user.get_balance:
             raise serializers.ValidationError("Exceed amount.")
-        
+
         if data['address'] == user.cm_address:
             raise serializers.ValidationError("Withdrawal address shouldn't be the crademaster wallet.")
         return data

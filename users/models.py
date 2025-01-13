@@ -51,7 +51,7 @@ class CustomUser(AbstractUser):
     
     @property
     def get_balance(self):
-        return self.get_deposit_balance - self.get_withdrawal_balance + self.get_royalty_balance + self.get_profits
+        return self.get_deposit_balance + self.get_royalty_balance + self.get_profits
 
     @property
     def get_profits(self):
@@ -59,7 +59,7 @@ class CustomUser(AbstractUser):
         executes = self.execute_set.all().order_by('created')
         for execute in executes:
             total_profits += execute.get_profit()
-        return total_profits        
+        return total_profits
 
     @property
     def get_deposit_balance(self):
@@ -70,7 +70,7 @@ class CustomUser(AbstractUser):
 
         total_amount = total_deposit['total_deposit_amount'] or 0
         balance = self.get_usdt_balance
-        return float(total_amount) + float(balance)
+        return float(total_amount) + float(balance) - float(self.get_withdrawal_balance)
 
     @property
     def get_royalty_balance(self):
