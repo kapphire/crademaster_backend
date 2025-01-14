@@ -59,7 +59,7 @@ class CustomUser(AbstractUser):
         executes = self.execute_set.all().order_by('created')
         for execute in executes:
             total_profits += execute.get_profit()
-        return total_profits
+        return float(total_profits)
 
     @property
     def get_deposit_balance(self):
